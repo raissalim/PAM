@@ -1,0 +1,70 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import logo from './assets/logozoo-removebg-preview.png';
+
+const Stack = createNativeStackNavigator();
+
+const HomeScreen = ({ navigation }) => {
+  const handlePress = () => {
+    navigation.navigate('NewScreen'); // Navega para a nova tela
+  };
+
+  return (
+    <View style={styles.container}>
+      <Image source={logo} style={styles.image} />
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Text style={styles.buttonText}>Clique aqui</Text>
+      </TouchableOpacity>
+      <StatusBar style="auto" />
+    </View>
+  );
+};
+
+const NewScreen = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Bem-vindo à nova tela!</Text>
+    </View>
+  );
+};
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Menu">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="NewScreen" component={NewScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#C5F558',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+  },
+  button: {
+    marginTop: 20,
+    backgroundColor: '#056614',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  text: {
+    fontSize: 24,
+    color: '#000',
+  },
+});
