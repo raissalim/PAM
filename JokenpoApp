@@ -1,0 +1,191 @@
+import React, { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
+
+export default function App() {
+  const [pontosJogador, setPontosJogador] = useState(0);
+  const [pontosMaquina, setPontosMaquina] = useState(0);
+  const [imgJogador, setImgJogador] = useState(0);
+  const [imgMaquina, setImgMaquina] = useState(0);
+
+  function exibirImagem(valor) {
+    if (valor === 1) {
+      return <Image source={require('./assets/pedra.png')} style={styles.img1} />;
+    } else if (valor === 2) {
+      return <Image source={require('./assets/papel.png')} style={styles.img1} />;
+    } else if (valor === 3) {
+      return <Image source={require('./assets/tesoura.png')} style={styles.img2} />;
+    } else {
+      return <Image source={require('./assets/caixaMario.png')} style={styles.img1} />;
+    }
+  }
+
+  function jogar(valorJogador) {
+    const valorMaquina = Math.floor(Math.random() * 3) + 1;
+
+    if ((valorJogador === 1 && valorMaquina === 3) ||
+        (valorJogador === 2 && valorMaquina === 1) ||
+        (valorJogador === 3 && valorMaquina === 2)) {
+      setPontosJogador(pontosJogador + 1);
+    } else if ((valorMaquina === 1 && valorJogador === 3) ||
+               (valorMaquina === 2 && valorJogador === 1) ||
+               (valorMaquina === 3 && valorJogador === 2)) {
+      setPontosMaquina(pontosMaquina + 1);
+    }
+
+    setImgJogador(valorJogador);
+    setImgMaquina(valorMaquina);
+  }
+
+  function nova() {
+    // Função para iniciar uma nova partida
+    setPontosJogador(0);
+    setPontosMaquina(0);
+    setImgJogador(0);
+    setImgMaquina(0);
+  }
+
+  return (
+    <View style={styles.container}>
+      <StatusBar style="auto" />
+      
+      <View style={styles.containerTitulo}>
+        <Image
+          style={styles.imageTitulo}
+          source={require('./assets/jokenpo.png')}
+        />
+      </View>
+
+      <View style={styles.containerPlacar}>
+        <View style={styles.placar}>
+          <Text style={styles.textPlacar}>Placar</Text>
+        </View>
+        <View style={styles.numeroPlacarContainer}>
+          <Text style={styles.numeroPlacar}>{pontosJogador}</Text>
+          <Text style={styles.numeroPlacar}>{pontosMaquina}</Text>
+        </View>
+      </View>
+
+      <View style={styles.novaParButton}>
+        <Pressable style={styles.corpoBotao} onPress={() => nova()}>
+          <Text style={styles.novaPartida}>Nova Partida</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.imageContainer}>
+        <Pressable onPress={() => jogar(1)}>
+          <Image
+            style={styles.image}
+            source={require('./assets/pedra.png')}
+          />
+        </Pressable>
+        <Pressable onPress={() => jogar(2)}>
+          <Image
+            style={styles.image}
+            source={require('./assets/papel.png')}
+          />
+        </Pressable>
+        <Pressable onPress={() => jogar(3)}>
+          <Image
+            style={styles.img2}
+            source={require('./assets/tesoura.png')}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFEA92',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerTitulo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  imageTitulo: {
+    marginTop: -300,
+  },
+  containerPlacar: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  placar: {
+    backgroundColor: '#FFEA92',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textPlacar: {
+    color: 'black',
+    textTransform: 'uppercase',
+    fontStyle: 'italic',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  numeroPlacarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  numeroPlacar: {
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginHorizontal: 10,
+  },
+  containerVS: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  imagevs: {
+    width: 95,
+    height: 95,
+  },
+  novaParButton: {
+    marginTop: 20,
+  },
+  novaPartida: {
+    color: 'white',
+    fontStyle: 'italic',
+    fontSize: 30,
+  },
+  corpoBotao: {
+    marginTop: 20,
+    marginBottom: 20,
+    borderRadius: 20,
+    borderColor: 'black',
+    borderWidth: 2,
+    width: 200,
+    height: 70,
+    backgroundColor: '#0266BD',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: -140,
+  },
+  image: {
+    width: 100,
+    height: 100,
+  },
+  img1: {
+    width: 100,
+    height: 100,
+  },
+  img2: {
+    width: 100,
+    height: 100, 
+    resizeMode: 'contain',
+  },
+});
