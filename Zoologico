@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Animatable from 'react-native-animatable';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import logo from './assets/logozoo-removebg-preview.png';
@@ -8,15 +9,20 @@ const Stack = createNativeStackNavigator();
 
 const HomeScreen = ({ navigation }) => {
   const handlePress = () => {
-    navigation.navigate('NewScreen'); // Navega para a nova tela
+    navigation.navigate('NewScreen'); 
   };
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={styles.image} />
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>Clique aqui</Text>
-      </TouchableOpacity>
+      <Animatable.View style={styles.animacaoLogo} animation="fadeIn" duration={2000} delay={500}>
+        <Image source={logo} style={styles.image} />
+      </Animatable.View>
+        <Animatable.View style={styles.animacaoBotao} animation="fadeIn" duration={2000} delay={2200}>
+          <TouchableOpacity style={styles.button} onPress={handlePress}>
+            <Text style={styles.buttonText}>Entrar</Text>
+          </TouchableOpacity>
+
+        </Animatable.View>
       <StatusBar style="auto" />
     </View>
   );
@@ -27,7 +33,7 @@ const NewScreen = () => {
     <View style={styles.container}>
       <Text style={styles.text}>Bem-vindo à nova tela!</Text>
     </View>
-  );
+  );6
 };
 
 export default function App() {
@@ -49,19 +55,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 300,
+    height: 300,
     marginTop: 20,
   },
   button: {
+    width: 200,
     marginTop: 20,
-    backgroundColor: '#056614',
+    backgroundColor: '#A0D934',
     padding: 10,
     borderRadius: 5,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#000',
     fontSize: 16,
+    textTransform: 'uppercase',
+    marginLeft: 57,
+    fontWeight: 'bold',
+
   },
   text: {
     fontSize: 24,
