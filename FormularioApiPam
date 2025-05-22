@@ -1,0 +1,160 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment'; // Para formatar a data
+
+const FormularioCadastro = () => {
+  const [nome, setNome] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [altura, setAltura] = useState('');
+  const [peso, setPeso] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [imagem, setImagem] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // Função para escolher uma imagem
+  const escolherImagem = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImagem(result.assets[0].uri); // Salvando a URI da imagem
+    }
+  };
+
+  // Função para lidar com a seleção de data
+  const onChangeDataNascimento = (event, selectedDate) => {
+    const currentDate = selectedDate || dataNascimento;
+    setShowDatePicker(false);
+    setDataNascimento(moment(currentDate).format('YYYY-MM-DD')); // Formatando a data
+  };
+
+  // Função de envio do formulário
+  const handleSubmit = () => {
+    if (!nome || !cpf || !altura || !peso || !email || !senha || !dataNascimento || !imagem) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+    } else {
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
+      // Aqui você pode fazer o envio dos dados para um servidor
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Formulário de Cadastro</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Nome"
+        value={nome}
+        onChangeText={setNome}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="CPF"
+        value={cpf}
+        onChangeText={setCpf}
+        keyboardType="numeric"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Altura (em metros)"
+        value={altura}
+        onChangeText={setAltura}
+        keyboardType="numeric"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Peso (em kg)"
+        value={peso}
+        onChangeText={setPeso}
+        keyboardType="numeric"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="E-mail"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Senha"
+        value={senha}
+        onChangeText={setSenha}
+        secureTextEntry
+      />
+
+      <Text style={styles.label}>Data de Nascimento:</Text>
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <Text style={styles.input}>{dataNascimento || 'Selecione a data'}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={new Date(dataNascimento || Date.now())}
+          mode="date"
+          display="default"
+          onChange={onChangeDataNascimento}
+        />
+      )}
+
+      <Text style={styles.label}>Imagem:</Text>
+      <TouchableOpacity onPress={escolherImagem}>
+        <Text style={styles.button}>Escolher Imagem</Text>
+      </TouchableOpacity>
+
+      {imagem && <Image source={{ uri: imagem }} style={styles.image} />}
+
+      <Button title="Enviar" onPress={handleSubmit} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+  },
+  label: {
+    fontSize: 16,
+    marginTop: 10,
+  },
+  button: {
+    color: '#007bff',
+    marginVertical: 10,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginVertical: 10,
+  },
+});
+
+export default FormularioCadastro;
