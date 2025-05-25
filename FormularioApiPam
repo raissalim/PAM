@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, Image } from 'react-native';
+import {
+  View, Text, TextInput, Button,
+  StyleSheet, Alert, TouchableOpacity, Image
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment'; // Para formatar a data
+import moment from 'moment';
+import axios from 'axios';
 
 const FormularioCadastro = () => {
   const [nome, setNome] = useState('');
@@ -13,9 +16,8 @@ const FormularioCadastro = () => {
   const [senha, setSenha] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [imagem, setImagem] = useState(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Função para escolher uma imagem
+  // Escolher imagem
   const escolherImagem = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -25,25 +27,43 @@ const FormularioCadastro = () => {
     });
 
     if (!result.canceled) {
-      setImagem(result.assets[0].uri); // Salvando a URI da imagem
+      setImagem(result.assets[0].uri);
     }
   };
 
-  // Função para lidar com a seleção de data
-  const onChangeDataNascimento = (event, selectedDate) => {
-    const currentDate = selectedDate || dataNascimento;
-    setShowDatePicker(false);
-    setDataNascimento(moment(currentDate).format('YYYY-MM-DD')); // Formatando a data
-  };
-
-  // Função de envio do formulário
+  // Enviar formulário
   const handleSubmit = () => {
     if (!nome || !cpf || !altura || !peso || !email || !senha || !dataNascimento || !imagem) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos');
-    } else {
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso');
-      // Aqui você pode fazer o envio dos dados para um servidor
+      return;
     }
+
+    const dados = {
+      nome,
+      cpf,
+      altura,
+      peso,
+      email,
+      senha,
+      dataNascimento,
+      imagem,
+    };
+
+    const configuracao = {
+      headers: {
+        "Accept": "application/json",
+      },
+    };
+
+    axios.post('https://sua-api.com/cadastro', dados, configuracao)
+      .then(response => {
+        console.log(response.data);
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      })
+      .catch(error => {
+        console.log('Erro ao enviar:', error);
+        Alert.alert('Erro', 'Falha ao enviar os dados.');
+      });
   };
 
   return (
@@ -98,17 +118,13 @@ const FormularioCadastro = () => {
       />
 
       <Text style={styles.label}>Data de Nascimento:</Text>
-      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-        <Text style={styles.input}>{dataNascimento || 'Selecione a data'}</Text>
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-          value={new Date(dataNascimento || Date.now())}
-          mode="date"
-          display="default"
-          onChange={onChangeDataNascimento}
-        />
-      )}
+      <TextInput
+        style={styles.input}
+        placeholder="YYYY-MM-DD"
+        value={dataNascimento}
+        onChangeText={setDataNascimento}
+        onFocus={(e) => { e.target.type = 'date'; }}
+      />
 
       <Text style={styles.label}>Imagem:</Text>
       <TouchableOpacity onPress={escolherImagem}>
