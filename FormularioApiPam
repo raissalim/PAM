@@ -4,7 +4,6 @@ import {
   StyleSheet, Alert, TouchableOpacity, Image
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import moment from 'moment';
 import axios from 'axios';
 
 const FormularioCadastro = () => {
@@ -17,7 +16,6 @@ const FormularioCadastro = () => {
   const [dataNascimento, setDataNascimento] = useState('');
   const [imagem, setImagem] = useState(null);
 
-  // Escolher imagem
   const escolherImagem = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -31,7 +29,6 @@ const FormularioCadastro = () => {
     }
   };
 
-  // Enviar formulário
   const handleSubmit = () => {
     if (!nome || !cpf || !altura || !peso || !email || !senha || !dataNascimento || !imagem) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos');
@@ -123,7 +120,6 @@ const FormularioCadastro = () => {
         placeholder="YYYY-MM-DD"
         value={dataNascimento}
         onChangeText={setDataNascimento}
-        onFocus={(e) => { e.target.type = 'date'; }}
       />
 
       <Text style={styles.label}>Imagem:</Text>
@@ -133,7 +129,9 @@ const FormularioCadastro = () => {
 
       {imagem && <Image source={{ uri: imagem }} style={styles.image} />}
 
-      <Button title="Enviar" onPress={handleSubmit} />
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>Enviar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -141,35 +139,56 @@ const FormularioCadastro = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#CAAEFA',
     padding: 20,
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     marginBottom: 20,
     textAlign: 'center',
+    color: '#4B0082',
+    fontWeight: 'bold',
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
+    height: 45,
+    borderColor: '#C599FA',
+    borderWidth: 1.5,
+    borderRadius: 8,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    backgroundColor: '#FFF',
   },
   label: {
     fontSize: 16,
     marginTop: 10,
+    color: '#4B0082',
+    fontWeight: '500',
   },
   button: {
-    color: '#007bff',
+    color: '#4B0082',
     marginVertical: 10,
     textAlign: 'center',
     fontSize: 16,
+    textDecorationLine: 'underline',
   },
   image: {
     width: 100,
     height: 100,
     marginVertical: 10,
+    borderRadius: 8,
+  },
+  submitButton: {
+    backgroundColor: '#C599FA',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  submitButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 
